@@ -2,7 +2,7 @@
   "name": "mapillary-street-view-simulator",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://mocialov.github.io/mapillary_street_view_simulator",
+  "homepage": "https://mocialov.github.io/city_explorer_with_mapillary",
   "dependencies": {
     "@types/node": "^16.18.0",
     "@types/react": "^18.2.0",
