@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/city_explorer_with_mapillary/static/css/main.2d672135.css",
-    "main.js": "/city_explorer_with_mapillary/static/js/main.e2320290.js",
+    "main.css": "/city_explorer_with_mapillary/static/css/main.52b59a6b.css",
+    "main.js": "/city_explorer_with_mapillary/static/js/main.0023d453.js",
     "static/media/background.gif": "/city_explorer_with_mapillary/static/media/background.ce327dda7e1395324c94.gif",
     "index.html": "/city_explorer_with_mapillary/index.html",
-    "main.2d672135.css.map": "/city_explorer_with_mapillary/static/css/main.2d672135.css.map",
-    "main.e2320290.js.map": "/city_explorer_with_mapillary/static/js/main.e2320290.js.map"
+    "main.52b59a6b.css.map": "/city_explorer_with_mapillary/static/css/main.52b59a6b.css.map",
+    "main.0023d453.js.map": "/city_explorer_with_mapillary/static/js/main.0023d453.js.map"
   },
   "entrypoints": [
-    "static/css/main.2d672135.css",
-    "static/js/main.e2320290.js"
+    "static/css/main.52b59a6b.css",
+    "static/js/main.0023d453.js"
   ]
 }
