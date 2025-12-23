@@ -20,8 +20,8 @@ const CityForm: React.FC<CityFormProps> = ({ onSubmit, isLoading }) => {
 
   return (
     <div className="city-form-container">
-      <h1>🌆 Explore A City</h1>
-      <p className="subtitle">Discover random routes through any city with street-level imagery</p>
+      <h1>Navigate streets of any city with Mapillary</h1>
+      <p className="subtitle">Generate routes and explore street-level slideshows powered by Mapillary imagery.</p>
       
       <form onSubmit={handleSubmit} className="city-form">
         <div className="form-group">
@@ -39,7 +39,7 @@ const CityForm: React.FC<CityFormProps> = ({ onSubmit, isLoading }) => {
         </div>
 
         <button type="submit" className={`submit-button ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
-          <span className="button-text">{isLoading ? 'Generating routes...' : 'Explore City'}</span>
+          <span className="button-text">{isLoading ? 'Generating routes...' : 'Start Exploring'}</span>
         </button>
       </form>
     </div>

@@ -42,7 +42,14 @@ const RouteList: React.FC<RouteListProps> = ({ routes, selectedRouteId, onRouteS
           >
             <div className="route-thumbnail">
               {route.images.length > 0 ? (
-                <img src={route.images[0]} alt={`Route ${index + 1}`} />
+                <img
+                  src={route.images[0]}
+                  alt={
+                    route.originAddress && route.destinationAddress
+                      ? `Route ${index + 1} in ${cityName}: ${route.originAddress} to ${route.destinationAddress} — Mapillary street-level preview`
+                      : `Route ${index + 1} in ${cityName} — Mapillary street-level preview`
+                  }
+                />
               ) : (
                 <div className="thumbnail-placeholder">
                   {route.isLoading ? (
