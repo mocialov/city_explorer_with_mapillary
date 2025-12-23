@@ -108,9 +108,59 @@
   background: #e67e22;
 }
 
+.route-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 90%;
+  max-width: 600px;
+  margin: 0.75rem 0;
+  padding: 0 1rem;
+}
+
+.progress-label {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  position: relative;
+}
+
+.progress-track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
+  border-radius: 3px;
+  opacity: 0.3;
+}
+
+.progress-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: left 0.3s ease;
+}
+
+.progress-car {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  transform: scaleX(-1);
+}
+
 .slideshow-info {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 90%;
   max-width: 800px;
@@ -178,6 +228,30 @@
   height: 100%;
   color: white;
   text-align: center;
+}
+
+.loading-car-animation {
+  font-size: 3rem;
+  animation: drive-back-forth 4s ease-in-out infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes drive-back-forth {
+  0% {
+    transform: translateX(-80px) scaleX(-1);
+  }
+  45% {
+    transform: translateX(80px) scaleX(-1);
+  }
+  50% {
+    transform: translateX(80px) scaleX(1);
+  }
+  95% {
+    transform: translateX(-80px) scaleX(1);
+  }
+  100% {
+    transform: translateX(-80px) scaleX(-1);
+  }
 }
 
 .loading-placeholder p {

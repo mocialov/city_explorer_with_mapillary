@@ -132,17 +132,18 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
   }, [currentIndex, isPlaying]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Show "no images found" message only after loading is complete and minimum wait time
-  if (showNoImagesMessage && images.length === 0) {
-    return (
-      <div className="slideshow-container">
-        <div className="no-images">
-          <p>No images found for this route.</p>
-          <p>Try a different location with better Mapillary coverage.</p>
-          <button onClick={onClose} className="close-button">Close</button>
-        </div>
-      </div>
-    );
-  }
+  // Commented out - keep showing loading animation instead
+  // if (showNoImagesMessage && images.length === 0) {
+  //   return (
+  //     <div className="slideshow-container">
+  //       <div className="no-images">
+  //         <p>No images found for this route.</p>
+  //         <p>Try a different location with better Mapillary coverage.</p>
+  //         <button onClick={onClose} className="close-button">Close</button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="slideshow-container">
@@ -170,13 +171,27 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
             </>
           ) : (
             <div className="loading-placeholder">
-              <p>Loading images...</p>
+              <div className="loading-car-animation">🚗</div>
+              <p>Loading route images...</p>
               {loadingMessage && <p className="loading-message">{loadingMessage}</p>}
             </div>
           )}
         </div>
         
-        <div className="slideshow-controls">
+        <div className="route-progress">
+          <span className="progress-label">START</span>
+          <div className="progress-track">
+            <div 
+              className="progress-indicator" 
+              style={{ left: `${images.length > 0 ? (currentIndex / Math.max(images.length - 1, 1)) * 100 : 0}%` }}
+            >
+              <div className="progress-car">🚗</div>
+            </div>
+          </div>
+          <span className="progress-label">FINISH</span>
+        </div>
+
+        {/* <div className="slideshow-controls">
           <button onClick={handlePrevious} className="control-btn" disabled={images.length === 0}>
             ⏮ Previous
           </button>
@@ -188,15 +203,9 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
           <button onClick={handleNext} className="control-btn" disabled={images.length === 0}>
             Next ⏭
           </button>
-        </div>
+        </div> */}
 
-        <div className="slideshow-info">
-          <span>
-            Image {images.length > 0 ? currentIndex + 1 : 0} of {images.length}
-            {isLoading && currentIndex === images.length - 1 && ' (waiting for more...)'}
-            {isLoading && currentIndex < images.length - 1 && ' (loading more...)'}
-          </span>
-          
+        {/* <div className="slideshow-info">
           <div className="speed-control">
             <label htmlFor="speed">Speed:</label>
             <select
@@ -211,12 +220,12 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
               <option value="500">Very Fast (2 fps)</option>
             </select>
           </div>
-        </div>
+        </div> */}
       </div>
 
-      <div className="slideshow-footer">
+      {/* <div className="slideshow-footer">
         <p>💡 Tips: Arrow keys to navigate • Spacebar to play/pause</p>
-      </div>
+      </div> */}
     </div>
   );
 };

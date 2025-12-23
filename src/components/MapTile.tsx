@@ -11,22 +11,28 @@ const MapTile: React.FC<MapTileProps> = ({ latitude, longitude, zoom = 15 }) => 
   // OpenStreetMap static map tile URL
   // We'll use a simple marker overlay on the map
   const [mapSize, setMapSize] = useState<{ width: number; height: number }>({ width: 250, height: 200 });
+  const [effectiveZoom, setEffectiveZoom] = useState<number>(zoom);
 
   useEffect(() => {
     const updateSize = () => {
       const vw = window.innerWidth;
-      if (vw <= 400) {
-        setMapSize({ width: 150, height: 120 });
+      if (vw <= 480) {
+        // Reduce map to roughly half size on phones - square to avoid white space
+        setMapSize({ width: 100, height: 100 });
+        // Zoom out more on phones so place names are visible
+        setEffectiveZoom(13);
       } else if (vw <= 768) {
         setMapSize({ width: 180, height: 150 });
+        setEffectiveZoom(14);
       } else {
         setMapSize({ width: 250, height: 200 });
+        setEffectiveZoom(zoom);
       }
     };
     updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
-  }, []);
+  }, [zoom]);
   
   // Using OpenStreetMap's tile server with Leaflet marker
   // We'll create a simple static map using OSM tiles
@@ -34,7 +40,7 @@ const MapTile: React.FC<MapTileProps> = ({ latitude, longitude, zoom = 15 }) => 
   
   // Convert lat/lon to precise tile coordinates (with decimal precision)
   const latRad = latitude * Math.PI / 180;
-  const n = Math.pow(2, zoom);
+  const n = Math.pow(2, effectiveZoom);
   
   // Precise tile coordinates (not floored - we keep the decimal part)
   const xtileFloat = (longitude + 180) / 360 * n;
@@ -74,22 +80,13 @@ const MapTile: React.FC<MapTileProps> = ({ latitude, longitude, zoom = 15 }) => 
         y: tileY,
         left,
         top,
-        url: `https://tile.openstreetmap.org/${zoom}/${tileX}/${tileY}.png`
+        url: `https://tile.openstreetmap.org/${effectiveZoom}/${tileX}/${tileY}.png`
       });
     }
   }
   
-  // Format coordinates for display
-  const latDisplay = latitude.toFixed(6);
-  const lonDisplay = longitude.toFixed(6);
-
   return (
     <div className="map-tile-container">
-      <div className="map-tile-header">
-        <span className="map-coordinates">
-          {latDisplay}, {lonDisplay}
-        </span>
-      </div>
       <div className="map-tile" style={{ width: mapSize.width, height: mapSize.height }}>
         <div className="map-tiles">
           {tilesToLoad.map((tile, idx) => (
