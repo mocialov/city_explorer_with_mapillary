@@ -21,9 +21,7 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false); // Start paused until images arrive
-  const [playbackSpeed, setPlaybackSpeed] = useState(2000); // milliseconds per frame - default 0.5 fps
-  const [showNoImagesMessage, setShowNoImagesMessage] = useState(false);
-  const mountTimeRef = useRef(Date.now());
+  const playbackSpeed = 2000; // milliseconds per frame - default 0.5 fps
 
   // Main playback loop - automatically loops through available images
   useEffect(() => {
@@ -70,38 +68,6 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
       setCurrentIndex(images.length - 1);
     }
   }, [images.length, currentIndex]);
-
-  // Smart "no images found" detection - only show after loading complete AND minimum wait time
-  useEffect(() => {
-    const MINIMUM_WAIT_TIME = 3000; // Wait at least 3 seconds before showing error
-    
-    // If we have images, hide the error message
-    if (images.length > 0) {
-      setShowNoImagesMessage(false);
-      return;
-    }
-    
-    // If still loading, don't show error yet
-    if (isLoading) {
-      setShowNoImagesMessage(false);
-      return;
-    }
-    
-    // Loading is complete and no images - check if minimum time has passed
-    const timeElapsed = Date.now() - mountTimeRef.current;
-    
-    if (timeElapsed >= MINIMUM_WAIT_TIME) {
-      // Enough time has passed, show the error message
-      setShowNoImagesMessage(true);
-    } else {
-      // Wait for remaining time before showing error
-      const timeoutId = setTimeout(() => {
-        setShowNoImagesMessage(true);
-      }, MINIMUM_WAIT_TIME - timeElapsed);
-      
-      return () => clearTimeout(timeoutId);
-    }
-  }, [images.length, isLoading]);
 
   const handlePrevious = () => {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
