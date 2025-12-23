@@ -54,12 +54,6 @@
     bottom: 10px;
     right: 10px;
   }
-  
-  .map-tile {
-    width: 180px !important;
-    height: 150px !important;
-  }
-  
   .map-tile-header {
     font-size: 10px;
     padding: 4px 8px;

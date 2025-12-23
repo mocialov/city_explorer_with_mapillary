@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './MapTile.css';
 
 interface MapTileProps {
@@ -10,8 +10,23 @@ interface MapTileProps {
 const MapTile: React.FC<MapTileProps> = ({ latitude, longitude, zoom = 15 }) => {
   // OpenStreetMap static map tile URL
   // We'll use a simple marker overlay on the map
-  const mapWidth = 250;
-  const mapHeight = 200;
+  const [mapSize, setMapSize] = useState<{ width: number; height: number }>({ width: 250, height: 200 });
+
+  useEffect(() => {
+    const updateSize = () => {
+      const vw = window.innerWidth;
+      if (vw <= 400) {
+        setMapSize({ width: 150, height: 120 });
+      } else if (vw <= 768) {
+        setMapSize({ width: 180, height: 150 });
+      } else {
+        setMapSize({ width: 250, height: 200 });
+      }
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
   
   // Using OpenStreetMap's tile server with Leaflet marker
   // We'll create a simple static map using OSM tiles
@@ -30,17 +45,17 @@ const MapTile: React.FC<MapTileProps> = ({ latitude, longitude, zoom = 15 }) => 
   const worldPixelY = ytileFloat * tileSize;
   
   // Center of our map view
-  const centerX = mapWidth / 2;
-  const centerY = mapHeight / 2;
+  const centerX = mapSize.width / 2;
+  const centerY = mapSize.height / 2;
   
   // Calculate which tiles we need to cover the map area
   const tilesToLoad = [];
-  const tilesX = Math.ceil(mapWidth / tileSize) + 1;
-  const tilesY = Math.ceil(mapHeight / tileSize) + 1;
+  const tilesX = Math.ceil(mapSize.width / tileSize) + 1;
+  const tilesY = Math.ceil(mapSize.height / tileSize) + 1;
   
   // Starting tile (top-left corner of our view)
-  const startTileX = Math.floor(xtileFloat - (mapWidth / 2) / tileSize);
-  const startTileY = Math.floor(ytileFloat - (mapHeight / 2) / tileSize);
+  const startTileX = Math.floor(xtileFloat - (mapSize.width / 2) / tileSize);
+  const startTileY = Math.floor(ytileFloat - (mapSize.height / 2) / tileSize);
   
   for (let ty = 0; ty < tilesY; ty++) {
     for (let tx = 0; tx < tilesX; tx++) {
@@ -75,7 +90,7 @@ const MapTile: React.FC<MapTileProps> = ({ latitude, longitude, zoom = 15 }) => 
           {latDisplay}, {lonDisplay}
         </span>
       </div>
-      <div className="map-tile" style={{ width: mapWidth, height: mapHeight }}>
+      <div className="map-tile" style={{ width: mapSize.width, height: mapSize.height }}>
         <div className="map-tiles">
           {tilesToLoad.map((tile, idx) => (
             <img
