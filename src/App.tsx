@@ -226,6 +226,16 @@ const App: React.FC = () => {
     setSelectedRouteId(routeId);
   };
 
+  const handleRouteComplete = () => {
+    // Find current route index
+    const currentIndex = routes.findIndex((r) => r.id === selectedRouteId);
+    if (currentIndex === -1) return;
+    
+    // Move to next route, or loop back to first
+    const nextIndex = (currentIndex + 1) % routes.length;
+    setSelectedRouteId(routes[nextIndex].id);
+  };
+
   const handleBackToForm = () => {
     // Cancel all downloads
     Object.keys(cancelDownloadRef.current).forEach((key) => {
@@ -254,6 +264,7 @@ const App: React.FC = () => {
                 onClose={handleBackToForm}
                 isLoading={selectedRoute.isLoading}
                 loadingMessage={`Loading images for route...`}
+                onRouteComplete={handleRouteComplete}
               />
             ) : (
               <div className="no-selection">

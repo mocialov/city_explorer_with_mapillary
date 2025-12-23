@@ -8,6 +8,7 @@ interface ImageSlideshowProps {
   onClose: () => void;
   isLoading?: boolean;
   loadingMessage?: string;
+  onRouteComplete?: () => void;
 }
 
 const ImageSlideshow: React.FC<ImageSlideshowProps> = ({ 
@@ -15,7 +16,8 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
   coordinates, 
   onClose, 
   isLoading = false, 
-  loadingMessage = '' 
+  loadingMessage = '',
+  onRouteComplete
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false); // Start paused until images arrive
@@ -40,8 +42,11 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
           if (isLoading) {
             return prev; // Stay on current image
           }
-          // If loading complete, loop back to start
-          return 0;
+          // If loading complete, move to next route
+          if (onRouteComplete) {
+            onRouteComplete();
+          }
+          return 0; // Reset to start for current route
         }
         
         return nextIndex;
@@ -49,7 +54,7 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
     }, playbackSpeed);
 
     return () => clearInterval(interval);
-  }, [isPlaying, playbackSpeed, isLoading, images.length]); // Added isLoading to know when to pause vs loop
+  }, [isPlaying, playbackSpeed, isLoading, images.length, onRouteComplete]); // Added onRouteComplete
 
   // Auto-start playback when first images arrive
   useEffect(() => {
@@ -147,10 +152,10 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
 
   return (
     <div className="slideshow-container">
-      <div className="slideshow-header">
+      {/* <div className="slideshow-header">
         <h2>Route Preview {isLoading && '(Loading...)'}</h2>
         <button onClick={onClose} className="close-button">✕</button>
-      </div>
+      </div> */}
 
       <div className="slideshow-main">
         <div className="image-container">
