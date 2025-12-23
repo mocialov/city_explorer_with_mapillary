@@ -27,6 +27,21 @@ const App: React.FC = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const cancelDownloadRef = useRef<{ [key: string]: boolean }>({});
 
+  // Debug routes changes
+  React.useEffect(() => {
+    console.log('🔄 Routes state updated:', {
+      totalRoutes: routes.length,
+      routes: routes.map(r => ({
+        id: r.id,
+        imageCount: r.imageCount,
+        imagesLength: r.images.length,
+        isLoading: r.isLoading,
+        hasOriginAddress: !!r.originAddress,
+        hasDestinationAddress: !!r.destinationAddress
+      }))
+    });
+  }, [routes]);
+
   const fetchImagesForRoute = async (
     routeId: string,
     routeCoords: [number, number][],
@@ -40,6 +55,7 @@ const App: React.FC = () => {
     const usedImageIds = new Set<string>();
     const usedImageLocations: [number, number][] = [];
     const minImageDistanceKm = 0.03;
+    const MAX_IMAGES_PER_ROUTE = 100; // Cap at 100 images per route
 
     const pointsToFetch = spacedPoints.map(({ coord, bearing }) => ({
       coord,
@@ -52,10 +68,20 @@ const App: React.FC = () => {
         break;
       }
 
+      // Stop fetching if we've reached the maximum number of images
+      if (fetchedImages.length >= MAX_IMAGES_PER_ROUTE) {
+        break;
+      }
+
       const batch = pointsToFetch.slice(i, i + batchSize);
       const batchResults = await getMapillaryImagesBatch(batch, batchSize);
 
       batchResults.forEach((imageData) => {
+        // Check if we've reached the limit before adding more images
+        if (fetchedImages.length >= MAX_IMAGES_PER_ROUTE) {
+          return;
+        }
+
         if (imageData && !usedImageIds.has(imageData.id)) {
           const [imgLon, imgLat] = imageData.geometry.coordinates;
           const imageCoord: [number, number] = [imgLat, imgLon];
@@ -162,6 +188,11 @@ const App: React.FC = () => {
       coordinates: [number, number][],
       imageCount: number
     ) => {
+      console.log(`📸 Route ${routeId} progress:`, {
+        fetchedImages: images.length,
+        totalImageCount: imageCount,
+        stillLoading: images.length < imageCount && imageCount > 0
+      });
       setRoutes((prevRoutes) =>
         prevRoutes.map((r) =>
           r.id === routeId
@@ -197,11 +228,23 @@ const App: React.FC = () => {
         }
 
         // Mark route as loaded
-        setRoutes((prevRoutes) =>
-          prevRoutes.map((r) => (r.id === routeId ? { ...r, isLoading: false } : r))
-        );
+        console.log(`✅ Route ${routeId} finished loading`);
+        setRoutes((prevRoutes) => {
+          const updated = prevRoutes.map((r) => {
+            if (r.id === routeId) {
+              console.log(`✅ Final state for ${routeId}:`, {
+                imageCount: r.imageCount,
+                imagesLength: r.images.length,
+                willBeFiltered: r.imageCount < 5
+              });
+              return { ...r, isLoading: false };
+            }
+            return r;
+          });
+          return updated;
+        });
       } catch (error) {
-        console.error(`Error fetching route ${routeId}:`, error);
+        console.error(`❌ Error fetching route ${routeId}:`, error);
         setRoutes((prevRoutes) =>
           prevRoutes.map((r) => (r.id === routeId ? { ...r, isLoading: false } : r))
         );

@@ -25,6 +25,28 @@ interface RouteListProps {
 const RouteList: React.FC<RouteListProps> = ({ routes, selectedRouteId, onRouteSelect, cityName, onLoadMoreRoutes, isLoadingMore }) => {
   // Filter out routes with less than 5 images (unless they're still loading)
   const visibleRoutes = routes.filter(route => route.isLoading || route.imageCount >= 5);
+  
+  // Debugging: Log route filtering
+  React.useEffect(() => {
+    const filteredOut = routes.filter(route => !route.isLoading && route.imageCount < 5);
+    if (filteredOut.length > 0) {
+      console.log('🚫 Routes filtered out (< 5 images):', filteredOut.map(r => ({
+        id: r.id,
+        imageCount: r.imageCount,
+        isLoading: r.isLoading,
+        hasImages: r.images.length
+      })));
+    }
+    console.log('📊 RouteList stats:', {
+      totalRoutes: routes.length,
+      visibleRoutes: visibleRoutes.length,
+      loadingRoutes: routes.filter(r => r.isLoading).length,
+      completedRoutes: routes.filter(r => !r.isLoading).length
+    });
+  }, [routes, visibleRoutes]);
+  
+  // Check if any route is still loading
+  const anyRouteLoading = routes.some(route => route.isLoading);
 
   return (
     <div className="route-list-container">
@@ -87,11 +109,11 @@ const RouteList: React.FC<RouteListProps> = ({ routes, selectedRouteId, onRouteS
       
       <div className="load-more-container">
         <button 
-          className={`load-more-button ${isLoadingMore ? 'loading' : ''}`} 
+          className={`load-more-button ${isLoadingMore || anyRouteLoading ? 'loading' : ''}`} 
           onClick={onLoadMoreRoutes}
-          disabled={isLoadingMore}
+          disabled={isLoadingMore || anyRouteLoading}
         >
-          {isLoadingMore ? 'Loading more routes...' : '+ More Routes'}
+          {isLoadingMore ? 'Loading more routes...' : anyRouteLoading ? 'Loading routes...' : '+ More Routes'}
         </button>
       </div>
     </div>

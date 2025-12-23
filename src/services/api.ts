@@ -137,8 +137,8 @@ export async function reverseGeocode(lat: number, lon: number): Promise<string> 
     
     return `${lat.toFixed(3)}°, ${lon.toFixed(3)}°`; // Fallback to coordinates
   } catch (error) {
-    console.error('Reverse geocoding error:', error);
-    return `${lat.toFixed(3)}°, ${lon.toFixed(3)}°`; // Fallback to coordinates
+    // Silently fallback to coordinates when reverse geocoding fails
+    return `${lat.toFixed(3)}°, ${lon.toFixed(3)}°`;
   }
 }
 
@@ -180,22 +180,39 @@ export async function getRouteCoordinates(
  */
 export async function getMapillaryImage(
   coord: [number, number],
-  heading: number
+  heading: number,
+  retryCount: number = 0
 ): Promise<MapillaryImage | null> {
   try {
     const [lat, lon] = coord;
 
     const url = `${MAPILLARY_API_BASE}/images`;
     const params = new URLSearchParams({
-      access_token: MAPILLARY_ACCESS_TOKEN,
       fields: 'id,computed_compass_angle,geometry,captured_at,is_pano,thumb_2048_url',
       bbox: `${lon - 0.0002},${lat - 0.0002},${lon + 0.0002},${lat + 0.0002}`,
       limit: '50',
     });
 
-    const response = await fetch(`${url}?${params}`);
+    const response = await fetch(`${url}?${params}`, {
+      headers: {
+        'Authorization': `OAuth ${MAPILLARY_ACCESS_TOKEN}`,
+      },
+    });
+    
+    // Handle rate limiting with exponential backoff
+    if (response.status === 429) {
+      if (retryCount < 3) {
+        const delay = Math.pow(2, retryCount) * 1000; // 1s, 2s, 4s
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return getMapillaryImage(coord, heading, retryCount + 1);
+      }
+      // After 3 retries, silently return null
+      return null;
+    }
+    
     if (!response.ok) {
-      throw new Error(`Mapillary API error: ${response.statusText}`);
+      // Silently return null for other errors
+      return null;
     }
 
     const data = await response.json();
@@ -253,7 +270,7 @@ export async function getMapillaryImage(
 
     return null;
   } catch (error) {
-    console.error('Mapillary API error:', error);
+    // Silently return null on fetch errors (network issues, CORS, etc.)
     return null;
   }
 }
@@ -273,9 +290,9 @@ export async function getMapillaryImagesBatch(
     const batchResults = await Promise.all(batchPromises);
     results.push(...batchResults);
     
-    // Small delay between batches to be respectful to the API
+    // Increased delay between batches to avoid rate limiting
     if (i + batchSize < points.length) {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
   }
   
