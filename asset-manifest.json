@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/city_explorer_with_mapillary/static/css/main.9fc6e546.css",
+    "main.js": "/city_explorer_with_mapillary/static/js/main.42ca0fc9.js",
+    "static/media/background.gif": "/city_explorer_with_mapillary/static/media/background.ce327dda7e1395324c94.gif",
+    "index.html": "/city_explorer_with_mapillary/index.html",
+    "main.9fc6e546.css.map": "/city_explorer_with_mapillary/static/css/main.9fc6e546.css.map",
+    "main.42ca0fc9.js.map": "/city_explorer_with_mapillary/static/js/main.42ca0fc9.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9fc6e546.css",
+    "static/js/main.42ca0fc9.js"
+  ]
+}
