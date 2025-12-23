@@ -241,6 +241,7 @@ const App: React.FC = () => {
 
   return (
     <div className={`App ${showExplorer ? 'explorer-active' : ''}`}>
+      <h1 className="visually-hidden">City Explorer — Navigate streets of any city with Mapillary</h1>
       {!showExplorer ? (
         <CityForm onSubmit={handleCitySubmit} isLoading={loadingState.isLoading} />
       ) : (

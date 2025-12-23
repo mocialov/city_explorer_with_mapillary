@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mocialov.github.io/city_explorer_with_mapillary/sitemap.xml

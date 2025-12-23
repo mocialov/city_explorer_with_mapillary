@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Mapillary Street View Driving Simulator - Generate virtual drive timelapses" />
+    <title>Page Not Found — Mapillary Street View Simulator</title>
+    <!-- Match key tags from index for share previews -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Mapillary Street View Simulator" />
+    <meta property="og:description" content="Mapillary Street View Driving Simulator - Generate virtual drive timelapses" />
+    <meta property="og:url" content="https://mocialov.github.io/city_explorer_with_mapillary" />
+    <meta property="og:image" content="https://mocialov.github.io/city_explorer_with_mapillary/images/background.gif" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mapillary Street View Simulator" />
+    <meta name="twitter:description" content="Mapillary Street View Driving Simulator - Generate virtual drive timelapses" />
+    <meta name="twitter:image" content="https://mocialov.github.io/city_explorer_with_mapillary/images/background.gif" />
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif; margin: 0; display: grid; place-items: center; min-height: 100vh; }
+      .box { text-align: center; padding: 24px; }
+      .box a { color: #0366d6; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <h1>404 — Not Found</h1>
+      <p>We couldn't find that page. Returning to the app…</p>
+      <p><a href="/city_explorer_with_mapillary/">Go to homepage</a></p>
+    </div>
+    <script>
+      // GitHub Pages SPA redirect helper (preserves path in hash for routers)
+      (function() {
+        var l = window.location;
+        var base = '/city_explorer_with_mapillary/';
+        if (l.pathname !== base) {
+          // Redirect to base while preserving the original path in the hash
+          var newUrl = l.protocol + '//' + l.host + base + '#!' + l.pathname.replace(base, '') + l.search + l.hash;
+          window.location.replace(newUrl);
+        }
+      })();
+    </script>
+    <div id="root"></div>
+    <!-- The app will mount here if the redirect isn't needed -->
+    <script>
+      // In case a router isn't used, we can still load the app bundle (served from index)
+      // This keeps the 404 usable without server config.
+    </script>
+  </body>
+</html>
